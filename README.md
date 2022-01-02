@@ -12,7 +12,7 @@ Therefore most of the advertised features are not yet implemented.
 
 # PiBell
 
-![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
+![](https://raw.githubusercontent.com/faupau03/PiBell/master/Logo.webp)
 
 ![](https://img.shields.io/github/stars/faupau03/pibell.svg) ![](https://img.shields.io/github/forks/faupau03/pibell.svg) ![](https://img.shields.io/github/tag/faupau03/pibell.svg) ![](https://img.shields.io/github/release/faupau03/pibell.svg) ![](https://img.shields.io/github/issues/faupau03/pibell.svg)
 
