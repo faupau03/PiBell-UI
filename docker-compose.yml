@@ -1,0 +1,22 @@
+version: "2"
+services:
+  node:
+    image: "node:latest"
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      #- NODE_ENV=production
+      - DOORBELL_IP=192.168.178.52
+      - DOORBELL_PORT=9090
+    volumes:
+      - ./:/home/node/app
+    expose:
+      - "8081"
+    #command: "npm start"
+    command: "npm start"
+    networks:
+      - "proxy_default"
+networks:
+  proxy_default:
+    external:
+      name: proxy_default
