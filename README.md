@@ -5,23 +5,22 @@ Therefore most of the advertised features are not yet implemented.
 ### Features
 
 - Supports all major browsers (Chrome, Firefox, Safari)
-- Support MQTT > not yet implemented
 - Support Homeassistant (custom card) > not yet implemented
 - Full-featured: Near-Real-time camera feed
 
 
-# PiBell
+# PiBell UI
   
 <img src="https://raw.githubusercontent.com/faupau03/PiBell/master/Logo.webp" alt="drawing" width="200"/>
   
-![](https://img.shields.io/github/stars/faupau03/pibell.svg) ![](https://img.shields.io/github/forks/faupau03/pibell.svg) ![](https://img.shields.io/github/tag/faupau03/pibell.svg) ![](https://img.shields.io/github/release/faupau03/pibell.svg) ![](https://img.shields.io/github/issues/faupau03/pibell.svg)
+![](https://img.shields.io/github/stars/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/forks/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/tag/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/release/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/issues/faupau03/pibell-ui.svg)
 
 **Table of contents**
 
 ## Installation
 ### Docker
 #### Clone this repository
-`$ git clone https://github.com/faupau03/pibell`
+`$ git clone https://github.com/faupau03/pibell-ui`
 #### Install docker and docker-compose
 [Installation of Docker](https://docs.docker.com/engine/install/ "Installation of Docker")  
 [Installation of docker-compose](https://docs.docker.com/compose/install/ "Installation of docker-compose")
@@ -29,8 +28,10 @@ Therefore most of the advertised features are not yet implemented.
 `$ nano docker-compose.yml`  
 
 Change the following lines according to your needs  
-`DOORBELL_IP= <IP from pi>`  
-`DOORBELL PORT = <port from pi>`  
+`WEBRTC_IP = <IP from pi>`  
+`WEBRTC_PORT = <port from pi>`  
+`VIDEO_IP = <IP from video feed>`  
+`VIDEO_PORT = <port from video feed>`
 #### Launch Application
 `$ docker-compose up -d`
 ### Native
