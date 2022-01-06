@@ -11,7 +11,7 @@ Therefore most of the advertised features are not yet implemented.
 
 # PiBell UI
   
-<img src="https://raw.githubusercontent.com/faupau03/PiBell/master/Logo.webp" alt="drawing" width="200"/>
+<img src="https://raw.githubusercontent.com/faupau03/PiBell-UI/master/Logo.webp" alt="drawing" width="200"/>
   
 ![](https://img.shields.io/github/stars/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/forks/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/tag/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/release/faupau03/pibell-ui.svg) ![](https://img.shields.io/github/issues/faupau03/pibell-ui.svg)
 
