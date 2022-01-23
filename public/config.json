@@ -3,7 +3,7 @@
     "webrtc_port": "8080",
     "webrtc_ssl": "true",
     "video_ip": "192.168.178.52",
-    "video_port": "8090",
+    "video_port": "8000",
     "ice_servers": [
         {
             "urls": [

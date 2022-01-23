@@ -71,8 +71,8 @@
 <body>
   <div class="flex absolute inset-0 h-screen min-h-[630px] justify-center bg-neutral-800">
     <img class="absolute m-auto top-0 right-0 bottom-0 left-0"
-      src="https://<%= doorbell_ip %>:<%= doorbell_port %>/stream/video.mjpeg"
-      alt="https://<%= doorbell_ip %>:<%= doorbell_port %>/stream/video.mjpeg" width="840" height="630">
+      src=""
+      alt="" width="840" height="630" id="remote-video">
 
     <video class="hidden" id="remote-audio" autoplay=""></video>
 
@@ -80,7 +80,8 @@
     <!-- is visible when call coming in -->
     <div id="buttons"
       class="flex fixed justify-evenly items-center w-5/6 h-28 top-auto bottom-7 opacity-[0.85] bg-neutral-900 rounded-[20px]">
-      <button class="rounded-full bg-green-600 hover:bg-green-900 h-20 w-20 flex justify-center items-center" onclick="start();">
+      <button class="rounded-full bg-green-600 hover:bg-green-900 h-20 w-20 flex justify-center items-center"
+        onclick="start();">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" class="bi bi-telephone-fill"
           viewBox="0 0 16 16">
           <path fill-rule="evenodd"
@@ -130,7 +131,8 @@
           <path d="M9.486 10.607 5 6.12V8a3 3 0 0 0 4.486 2.607zm-7.84-9.253 12 12 .708-.708-12-12-.708.708z"></path>
         </svg>
       </button>
-      <button class="rounded-full bg-red-600 hover:bg-red-700 h-20 w-20 flex justify-center items-center" onclick="stop();">
+      <button class="rounded-full bg-red-600 hover:bg-red-700 h-20 w-20 flex justify-center items-center"
+        onclick="stop();">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white"
           class="rotate-[135deg] bi bi-telephone-fill" viewBox="0 0 16 16">
           <path fill-rule="evenodd"
@@ -164,9 +166,17 @@
     var media_constraints = null;
     var use_echo_cancellation = null;
 
-    var pc = null;
+    var pc;
     var trickle_ice = true;
     var ice_candidates = [];
+
+    var mediaConstraints = {
+      optional: [],
+      mandatory: {
+        OfferToReceiveAudio: true,
+        OfferToReceiveVideo: false
+      }
+    };
 
     var url = window.URL || window.webkitURL;
 
@@ -175,20 +185,60 @@
     RTCIceCandidate = window.RTCIceCandidate || window.webkitRTCIceCandidate;
 
     function createPeerConnection() {
+      console.log("Creating RTCPeerConnection");
       try {
-        var pcConfig_ = {
-          "iceServers": ice_servers
-        };
-        pc = new RTCPeerConnection(pcConfig_, pcOptions);
-        pc.onicecandidate = onIceCandidate;
-        if ('ontrack' in pc) {
-          pc.ontrack = onTrack;
-        }
-        pc.ondatachannel = onDataChannel;
+
+        pc = new RTCPeerConnection({
+          iceServers: [
+            {
+              urls: ["stun:stun.l.google.com:19302"]
+            },
+            {
+              urls: ["stun:" + webrtc_ip + ":" + "3478"]
+            }
+          ]
+        });
+        console.log("Created RTCPeerConnection" + pc);
+        //pc.onicecandidate = onIceCandidate; // not needed ?
+        pc.ontrack = onTrack;
+        //pc.ondatachannel = onDataChannel;   // not needed ?
         console.log("peer connection successfully created!");
+
+
       } catch (e) {
         console.error("createPeerConnection() failed");
       }
+    }
+
+    function onIceCandidate(event) {
+      if (event.candidate && event.candidate.candidate) {
+        var candidate = {
+          sdpMLineIndex: event.candidate.sdpMLineIndex,
+          sdpMid: event.candidate.sdpMid,
+          candidate: event.candidate.candidate
+        };
+        var request = {
+          what: "addIceCandidate",
+          data: JSON.stringify(candidate)
+        };
+        ws.send(JSON.stringify(request));
+      } else {
+        console.log("End of candidates.");
+      }
+    }
+
+    function addIceCandidates() {
+      iceCandidates.forEach(function (candidate) {
+        pc.addIceCandidate(candidate,
+          function () {
+            console.log("IceCandidate added: " + JSON.stringify(candidate));
+          },
+          function (error) {
+            console.error("addIceCandidate error: " + error);
+          }
+        );
+      });
+      iceCandidates = [];
     }
 
     function onTrack(event) {
@@ -214,7 +264,9 @@
           remoteDesc = false;
           createPeerConnection();
           if (stream) {
-            pc.addStream(stream);
+            for (const track of stream.getTracks()) {
+              pc.addTrack(track);
+            }
           }
           var request = {
             what: "call",
@@ -231,7 +283,7 @@
         ws.onopen = function () {
           console.log("onopen()");
 
-          audio_video_stream = null;
+          audio_stream = null;
           var cast_mic = true;
           var cast_tab = false;
           var cast_camera = false;
@@ -241,21 +293,24 @@
           var echo_cancellation = use_echo_cancellation;
           var localConstraints = {};
 
-          localConstraints['audio'] = {
-            echoCancellation: echo_cancellation
-          };
+          localConstraints['audio'] = true;
           localConstraints['video'] = false;
 
-          var localVideoElement = document.getElementById('local-video');
+          console.log("localConstraints=" + JSON.stringify(localConstraints));
+
           if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia(localConstraints, function (stream) {
-              audio_stream = stream;
-              call(stream);
-            }, function (error) {
-              stop();
-              alert("An error has occurred. Check media device, permissions on media and origin.");
-              console.error(error);
-            });
+            console.log("navigator.mediaDevices.getUserMedia() supported");
+            navigator.mediaDevices.getUserMedia(localConstraints)
+              .then(function (stream) {
+                console.log("getUserMedia() success");
+                audio_stream = stream;
+                call(stream);
+              })
+              .catch(function (error) {
+                stop();
+                alert("An error has occurred. Check media device, permissions on media and origin.");
+                console.error(error);
+              });
           }
           else {
             console.log("getUserMedia not supported");
@@ -386,7 +441,7 @@
       document.documentElement.style.cursor = 'default';
     }
 
-    async function getConfig(callback) {
+    async function getConfig(callback, callback2) {
       fetch('/config')
         .then(response => response.json())
         .then(data => {
@@ -400,6 +455,7 @@
           use_echo_cancellation = data.use_echo_cancellation;
 
           callback();
+          callback2();
         });
     }
     //function that checks wether the get parameter call is given
@@ -444,22 +500,47 @@
 
     function toggleMute() {
       if (document.getElementById('mic_mute').style.display == 'none') {
+        // mute
+        if (pc) {
+          pc.getSenders().forEach(function (sender) {
+            if (sender.track && sender.track.kind == 'audio') {
+              sender.track.enabled = false;
+            }
+          });
+        }
+
+        
         document.getElementById('mic_mute').style.display = 'flex';
         document.getElementById('mic').style.display = 'none';
       } else {
+        // unmute
+        if (pc) {
+          pc.getSenders().forEach(function (sender) {
+            if (sender.track && sender.track.kind == 'audio') {
+              sender.track.enabled = true;
+            }
+          });
+        }
         document.getElementById('mic_mute').style.display = 'none';
         document.getElementById('mic').style.display = 'flex';
       }
     }
+
+    function setVideo() {
+      document.getElementById("remote-video").src = "http://" + video_ip + ":" + video_port;
+    }
+
     toggleMute();
 
     window.onload = function () {
+      
       if (isCall()) {
-        getConfig(start);
+        getConfig(start, setVideo);
       }
       else {
-        getConfig(stop);
+        getConfig(stop, setVideo);
       }
+      
     };
 
     window.onbeforeunload = function () {

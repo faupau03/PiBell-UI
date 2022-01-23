@@ -2,14 +2,19 @@ const express = require('express')
 const app = express()
 const port = 80
 const path = require('path')
+const https = require('https');
+const fs = require('fs');
+
+const options = {
+  key: fs.readFileSync(__dirname + '/ssl/localhost+1-key.pem', 'utf8'),
+  cert: fs.readFileSync(__dirname + '/ssl/localhost+1.pem', 'utf8')
+};
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/public'));
 
 app.get("/", (request, response) => {
-  response.render('index.ejs', {
-    doorbell_ip: process.env.DOORBELL_IP,
-    doorbell_port: process.env.DOORBELL_PORT,
-  })
+  response.sendFile(__dirname + '/public/index.html');
 });
 
 app.get("/output.css", (request, response) => {
@@ -21,6 +26,6 @@ app.get("/config", (request, response) => {
 });
 
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+var server = https.createServer(options, app);
+
+server.listen(443);
