@@ -1,0 +1,1 @@
+{"webrtc_ip":"192.168.178.52","webrtc_port":"8080","webrtc_ssl":"true","video_ip":"192.168.178.52","video_port":"8000","ice_servers":[{"urls":["stun:stun.l.google.com:19302","stun:192.168.178.52:3478"]}],"media_constraints":{"optional":[],"mandatory":{"OfferToReceiveAudio":true,"OfferToReceiveVideo":true}},"use_echo_cancellation":true}
