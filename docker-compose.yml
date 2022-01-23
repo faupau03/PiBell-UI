@@ -6,8 +6,7 @@ services:
     working_dir: /home/node/app
     environment:
       #- NODE_ENV=production
-      - DOORBELL_IP=192.168.178.52
-      - DOORBELL_PORT=9090
+      # Please specify your configuration in public/config.json
     volumes:
       - ./:/home/node/app
     expose:

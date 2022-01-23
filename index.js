@@ -16,6 +16,11 @@ app.get("/output.css", (request, response) => {
   response.sendFile(__dirname + '/public/output.css');
 });
 
+app.get("/config", (request, response) => {
+  response.sendFile(__dirname + '/public/config.json');
+});
+
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
