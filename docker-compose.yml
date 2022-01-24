@@ -16,4 +16,4 @@ services:
     expose:
       - "8081"
     #command: "npm start"
-    command: "npm start"
+    command: "npm install && npm start"
