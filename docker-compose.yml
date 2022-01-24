@@ -6,14 +6,15 @@ services:
     working_dir: /home/node/app
     environment:
       #- NODE_ENV=production
-      VIDEO_IP=
-      VIDEO_PORT=
-      WEBRTC_IP=
-      WEBRTC_PORT=
+      - VIDEO_IP=
+      - VIDEO_PORT=
+      - WEBRTC_IP=
+      - WEBRTC_PORT=
+      - UI_PORT="443" # must be equal to expose or ports
       # more configuration can be made in config.json
     volumes:
       - ./:/home/node/app
     expose:
-      - "8081"
+      - "443"
     #command: "npm start"
-    command: "npm start"
+    command: "npm install && npm start"
