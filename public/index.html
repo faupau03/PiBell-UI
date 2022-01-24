@@ -158,8 +158,10 @@
     var webrtc_ip = null;
     var webrtc_port = null;
     var webrtc_ssl = null;
+
     var video_ip = null;
     var video_port = null;
+    var video_ssl = null;
 
     var ws = null;
     var ice_servers = null;
@@ -450,6 +452,7 @@
           webrtc_ssl = data.webrtc_ssl;
           video_ip = data.video_ip;
           video_port = data.video_port;
+          video_ssl = data.video_ssl;
           ice_servers = data.ice_servers;
           media_constraints = data.media_constraints;
           use_echo_cancellation = data.use_echo_cancellation;
@@ -527,7 +530,11 @@
     }
 
     function setVideo() {
-      document.getElementById("remote-video").src = "http://" + video_ip + ":" + video_port;
+      let video_protocol = "http";
+      if (video_ssl) {
+        video_protocol = "https";
+      }
+      document.getElementById("remote-video").src = video_protocol + "://" + video_ip + ":" + video_port;
     }
 
     toggleMute();
