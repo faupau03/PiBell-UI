@@ -49,4 +49,8 @@ if (process.env.VIDEO_IP) {
 if (process.env.VIDEO_PORT) {
   config.VIDEO_PORT = process.env.VIDEO_PORT;
 }
+if (process.env.UI_PORT) {
+  config.UI_PORT = process.env.UI_PORT;
+}
+
 fs.writeFileSync('config.json', JSON.stringify(config));
