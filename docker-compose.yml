@@ -11,6 +11,7 @@ services:
       - WEBRTC_IP=
       - WEBRTC_PORT=
       - UI_PORT="443" # must be equal to expose or ports
+      - UI_SSL="false" # if true, ssl certificate and key must be provided in ssl folder named key.pem and cert.pem
       # more configuration can be made in config.json
     volumes:
       - ./:/home/node/app

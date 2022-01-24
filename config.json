@@ -6,6 +6,7 @@
     "video_port": "8000",
     "video_ssl": "true",
     "ui_port": "443",
+    "ui_ssl": "false",
     "ice_servers": [{
         "urls": ["stun:stun.l.google.com:19302", "stun:192.168.178.52:3478"]
     }],

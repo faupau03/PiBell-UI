@@ -5,31 +5,6 @@ const path = require('path')
 const https = require('https');
 const fs = require('fs');
 
-const options = {
-  key: fs.readFileSync(__dirname + '/ssl/localhost+1-key.pem', 'utf8'),
-  cert: fs.readFileSync(__dirname + '/ssl/localhost+1.pem', 'utf8')
-};
-
-//
-//  Set up the server
-//
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get("/manifest.json", (request, response) => {
-  response.sendFile(__dirname + '/public/manifest.json');
-});
-
-app.get("/config", (request, response) => {
-  response.sendFile(__dirname + '/config.json');
-});
-
-//
-//  Start the server
-//
-var server = https.createServer(options, app);
-
-server.listen(443);
 
 
 //
@@ -52,5 +27,45 @@ if (process.env.VIDEO_PORT) {
 if (process.env.UI_PORT) {
   config.UI_PORT = process.env.UI_PORT;
 }
+if (process.env.UI_SSL) {
+  config.UI_SSL = process.env.UI_SSL;
+}
+
 
 fs.writeFileSync('config.json', JSON.stringify(config));
+
+//
+//  Set up the server
+//
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get("/manifest.json", (request, response) => {
+  response.sendFile(__dirname + '/public/manifest.json');
+});
+
+app.get("/config", (request, response) => {
+  response.sendFile(__dirname + '/config.json');
+});
+
+//
+//  Start the server
+//
+
+if (config.UI_SSL) {
+
+  const options = {
+    key: fs.readFileSync(__dirname + '/ssl/key.pem', 'utf8'),
+    cert: fs.readFileSync(__dirname + '/ssl/cert.pem', 'utf8')
+  };
+
+  var server = https.createServer(options, app);
+
+  server.listen(config.UI_PORT);
+} 
+else {
+  app.listen(config.UI_PORT);
+}
+
+
+
