@@ -17,4 +17,4 @@ services:
     expose:
       - "443"
     #command: "npm start"
-    command: "npm install && npm start"
+    command: bash -c "npm install && npm start"
