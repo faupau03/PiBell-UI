@@ -52,7 +52,7 @@ app.get("/config", (request, response) => {
 //  Start the server
 //
 
-if (config.UI_SSL) {
+if (config.UI_SSL == "true" || (typeof(config.UI_SSL) == "boolean" && config.UI_SSL)) {
 
   const options = {
     key: fs.readFileSync(__dirname + '/ssl/key.pem', 'utf8'),
