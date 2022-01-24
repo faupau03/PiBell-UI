@@ -4,7 +4,7 @@
   "description": "Website UI for uv4l webrtc",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js --ignore config.json"
+    "dev": "nodemon index.js --ignore config.json",
     "start": "node index.js"
   },
   "author": "Paul Paffe",
