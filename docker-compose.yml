@@ -6,10 +6,10 @@ services:
     working_dir: /home/node/app
     environment:
       #- NODE_ENV=production
-      VIDEO_IP=
-      VIDEO_PORT=
-      WEBRTC_IP=
-      WEBRTC_PORT=
+      - VIDEO_IP=
+      - VIDEO_PORT=
+      - WEBRTC_IP=
+      - WEBRTC_PORT=
       # more configuration can be made in config.json
     volumes:
       - ./:/home/node/app
