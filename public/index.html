@@ -8,6 +8,8 @@
   <link href="output.css" rel="stylesheet">
   <title>Doorbell</title>
   <link rel="icon" type="image/png" sizes="196x196" href="assets/favicon-196.png">
+  <link rel="manifest" href="/manifest.json">
+
   <meta name="msapplication-square70x70logo" content="assets/mstile-icon-128.png">
   <meta name="msapplication-square150x150logo" content="assets/mstile-icon-270.png">
   <meta name="msapplication-square310x310logo" content="assets/mstile-icon-558.png">
@@ -70,9 +72,7 @@
 
 <body>
   <div class="flex absolute inset-0 h-screen min-h-[630px] justify-center bg-neutral-800">
-    <img class="absolute m-auto top-0 right-0 bottom-0 left-0"
-      src=""
-      alt="" width="840" height="630" id="remote-video">
+    <img class="absolute m-auto top-0 right-0 bottom-0 left-0" src="" alt="" width="840" height="630" id="remote-video">
 
     <video class="hidden" id="remote-audio" autoplay=""></video>
 
@@ -509,7 +509,7 @@
           });
         }
 
-        
+
         document.getElementById('mic_mute').style.display = 'flex';
         document.getElementById('mic').style.display = 'none';
       } else {
@@ -533,14 +533,14 @@
     toggleMute();
 
     window.onload = function () {
-      
+
       if (isCall()) {
         getConfig(start, setVideo);
       }
       else {
         getConfig(stop, setVideo);
       }
-      
+
     };
 
     window.onbeforeunload = function () {
@@ -549,6 +549,21 @@
         //stop();
       }
     };
+
+
+    //Add service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').then(function (registration) {
+          // Registration was successful
+          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+        }, function (err) {
+          // registration failed :(
+          console.log('ServiceWorker registration failed: ', err);
+        });
+      });
+    }
+
 
   </script>
 </body>

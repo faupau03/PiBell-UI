@@ -14,12 +14,10 @@ const options = {
 //  Set up the server
 //
 
-app.get("/", (request, response) => {
-  response.sendFile(__dirname + '/public/index.html');
-});
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get("/output.css", (request, response) => {
-  response.sendFile(__dirname + '/public/output.css');
+app.get("/manifest.json", (request, response) => {
+  response.sendFile(__dirname + '/public/manifest.json');
 });
 
 app.get("/config", (request, response) => {
