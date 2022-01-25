@@ -13,24 +13,23 @@ const fs = require('fs');
 let config_file = fs.readFileSync('config.json');
 let config = JSON.parse(config_file);
 if (process.env.WEBRTC_IP) {
-  config.WEBRTC_IP = process.env.WEBRTC_IP;
+  config.webrtc_ip = process.env.WEBRTC_IP;
 }
 if (process.env.WEBRTC_PORT) {
-  config.WEBRTC_PORT = process.env.WEBRTC_PORT;
+  config.webrtc_port = process.env.WEBRTC_PORT;
 }
 if (process.env.VIDEO_IP) {
-  config.VIDEO_IP = process.env.VIDEO_IP;
+  config.video_ip = process.env.VIDEO_IP;
 }
 if (process.env.VIDEO_PORT) {
-  config.VIDEO_PORT = process.env.VIDEO_PORT;
+  config.video_port = process.env.VIDEO_PORT;
 }
 if (process.env.UI_PORT) {
-  config.UI_PORT = process.env.UI_PORT;
+  config.ui_port = process.env.UI_PORT;
 }
 if (process.env.UI_SSL) {
-  config.UI_SSL = process.env.UI_SSL;
+  config.ui_ssl = process.env.UI_SSL;
 }
-
 
 fs.writeFileSync('config.json', JSON.stringify(config));
 
@@ -52,7 +51,7 @@ app.get("/config", (request, response) => {
 //  Start the server
 //
 
-if (config.UI_SSL == "true" || (typeof(config.UI_SSL) == "boolean" && config.UI_SSL)) {
+if (config.ui_ssl == "true" || (typeof(config.ui_ssl) == "boolean" && config.ui_ssl)) {
 
   const options = {
     key: fs.readFileSync(__dirname + '/ssl/key.pem', 'utf8'),
@@ -61,10 +60,11 @@ if (config.UI_SSL == "true" || (typeof(config.UI_SSL) == "boolean" && config.UI_
 
   var server = https.createServer(options, app);
 
-  server.listen(config.UI_PORT);
+  server.listen(config.ui_port);
 } 
 else {
-  app.listen(config.UI_PORT);
+  console.log("Starting server on port " + config.ui_port);
+  app.listen(config.ui_port);
 }
 
 
